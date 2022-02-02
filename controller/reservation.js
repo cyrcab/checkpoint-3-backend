@@ -2,7 +2,11 @@ const prisma = require("../helpers/prisma");
 
 const getAllReservation = async (req, res, next) => {
 	try {
-		const listOfReservation = await prisma.reservation.findMany({});
+		const listOfReservation = await prisma.reservation.findMany({
+			orderBy: {
+				date: "desc",
+			},
+		});
 		res.status(200).json(listOfReservation);
 	} catch (error) {
 		next(error);
@@ -77,7 +81,13 @@ const deleteReservation = async (req, res, next) => {
 			await prisma.reservation.delete({
 				where: { id: reservationExist.id },
 			});
-			res.status(201).json({ ...reservationExist, message: "Reservation deleted with success", isDeleted: true });
+			res
+				.status(201)
+				.json({
+					...reservationExist,
+					message: "Reservation deleted with success",
+					isDeleted: true,
+				});
 		} else {
 			res.status(404).json({ message: "No reservation found", isDeleted: false });
 		}

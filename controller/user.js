@@ -1,8 +1,13 @@
 const prisma = require("../helpers/prisma");
+const { hashPassword, verifyPassWord } = require("../services/hashPass");
 
 const getAllUser = async (req, res, next) => {
 	try {
-		const listOfuser = await prisma.user.findMany({});
+		const listOfuser = await prisma.user.findMany({
+			orderBy: {
+				lastname: "asc",
+			},
+		});
 		if (listOfuser[0]) {
 			listOfuser.map((user) => delete user.password);
 		}
@@ -12,6 +17,7 @@ const getAllUser = async (req, res, next) => {
 		next(error);
 	}
 };
+
 const getUniqueUser = async (req, res, next) => {
 	try {
 		const { id } = req.params;
@@ -31,9 +37,10 @@ const getUniqueUser = async (req, res, next) => {
 		next(error);
 	}
 };
+
 const createUser = async (req, res, next) => {
 	try {
-		const { mail } = req.body;
+		const { mail, password } = req.body;
 		const payload = req.body;
 		const userExist = await prisma.user.findUnique({
 			where: {
@@ -43,8 +50,9 @@ const createUser = async (req, res, next) => {
 		if (userExist) {
 			res.status(409).json({ message: "User already exist", isCreated: false });
 		} else {
+			const hashedPassword = await hashPassword(password);
 			const newUser = await prisma.user.create({
-				data: { ...payload },
+				data: { ...payload, password: hashedPassword },
 			});
 			delete newUser.password;
 			res.status(201).json({ ...newUser, message: "User created with success", isCreated: true });
@@ -53,6 +61,7 @@ const createUser = async (req, res, next) => {
 		next(error);
 	}
 };
+
 const updateUser = async (req, res, next) => {
 	try {
 		const { id } = req.params;
@@ -81,6 +90,7 @@ const updateUser = async (req, res, next) => {
 		next(error);
 	}
 };
+
 const deleteUser = async (req, res, next) => {
 	try {
 		const { id } = req.params;
@@ -103,10 +113,35 @@ const deleteUser = async (req, res, next) => {
 	}
 };
 
+const loginUser = async (req, res, next) => {
+	try {
+		const { mail } = req.body;
+		const userExist = await prisma.user.findUnique({
+			where: {
+				mail: mail,
+			},
+		});
+		if (userExist) {
+			const isVerified = await verifyPassWord.toString(userExist.password, req.body.password);
+			if (isVerified) {
+				delete userExist.password;
+				res.status(201).json({ message: "User connected", isConnected: true, ...userExist });
+			} else {
+				res.send(401).json({ message: "User not connected", isConnected: false });
+			}
+		} else {
+			res.send(404).json({ message: "Utilisateur introuvable" });
+		}
+	} catch (err) {
+		next(err);
+	}
+};
+
 module.exports = {
 	getAllUser,
 	getUniqueUser,
 	updateUser,
 	deleteUser,
 	createUser,
+	loginUser,
 };

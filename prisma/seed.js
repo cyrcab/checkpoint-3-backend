@@ -22,8 +22,9 @@ async function main() {
 				lastname: "Lampion",
 				firstname: "Gerard",
 				mail: "lampion@mail.fr",
+				// password = password
 				password:
-					"$argon2id$v=19$m=16,t=2,p=1$bWFkYW1lZGVyZW5hbGVzdGxvdWlzZQ$bwsiQNeXuTA3SHWe0bAjeg",
+					"$argon2id$v=19$m=65536,t=5,p=1$nwQQkV+G42wgGo8W/7iplA$PJXdr+L5KeZEbpUoupMozY3gjXYdxXAnae/i4ZAYBVw",
 			},
 			{
 				roleId: 2,
@@ -31,7 +32,7 @@ async function main() {
 				firstname: "Fabien",
 				mail: "bertaut@mail.fr",
 				password:
-					"$argon2id$v=19$m=16,t=2,p=1$bWFkYW1lZGVyZW5hbGVzdGxvdWlzZQ$bwsiQNeXuTA3SHWe0bAjeg",
+					"$argon2id$v=19$m=65536,t=5,p=1$nwQQkV+G42wgGo8W/7iplA$PJXdr+L5KeZEbpUoupMozY3gjXYdxXAnae/i4ZAYBVw",
 			},
 			{
 				roleId: 3,
