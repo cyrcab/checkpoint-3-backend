@@ -44,15 +44,15 @@ async function main() {
 		data: [
 			{
 				date: new Date(`2022-05-23`),
-				nbrGest: 3,
+				nbrGuest: 3,
 			},
 			{
 				date: new Date(`2022-07-23`),
-				nbrGest: 8,
+				nbrGuest: 8,
 			},
 			{
 				date: new Date(`2022-01-23`),
-				nbrGest: 2,
+				nbrGuest: 2,
 			},
 		],
 	});
