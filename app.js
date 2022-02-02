@@ -1,5 +1,6 @@
 const express = require("express");
 require("dotenv").config();
+const setupRoute = require("./routes");
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // routes
+setupRoute(app);
 
 // post-route middlewares
 app.set("x-powered-by", false);
