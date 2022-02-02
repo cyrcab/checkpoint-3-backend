@@ -4,34 +4,33 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
-  // "mysql://cyrcab:Ukrainedu11&@localhost:3306/dbCheckpoint"
+  url      = "mysql://cyrcab:passWord1!@localhost:3306/dbCheckpoint"
 }
 
 model reservation {
-  idReservation Int       @id @unique(map: "idReservation_UNIQUE") @default(autoincrement())
-  date          DateTime? @db.DateTime(0)
-  nbrGest       Int?
-  userId        Int
-  user          user      @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "fk_reservation_user1")
+  id      Int      @id @default(autoincrement())
+  date    DateTime @db.DateTime(0)
+  nbrGest Int
+  userId  Int?     @default(3)
+  user    user?    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reservation_user1")
 
   @@index([userId], map: "fk_reservation_user1_idx")
 }
 
 model role {
-  idRole Int     @id @unique(map: "idRole_UNIQUE") @default(autoincrement())
-  name   String? @db.VarChar(45)
-  user   user[]
+  id   Int     @id @default(autoincrement())
+  name String? @db.VarChar(45)
+  user user[]
 }
 
 model user {
-  idUser      Int           @id @unique(map: "idUser_UNIQUE") @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   lastname    String?       @db.VarChar(45)
-  mail        String?       @unique(map: "mail_UNIQUE") @db.VarChar(255)
+  mail        String        @unique(map: "mail_UNIQUE") @db.VarChar(255)
   password    String?       @db.VarChar(255)
   firstname   String?       @db.VarChar(45)
   roleId      Int
-  role        role          @relation(fields: [roleId], references: [idRole], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_role")
+  role        role          @relation(fields: [roleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_role")
   reservation reservation[]
 
   @@index([roleId], map: "fk_user_role_idx")
