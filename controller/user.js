@@ -68,9 +68,31 @@ const updateUser = async (req, res, next) => {
 		next(error);
 	}
 };
+const deleteUser = async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const userExist = await prisma.user.findUnique({
+			where: {
+				id: Number(id),
+			},
+		});
+		if (userExist) {
+			await prisma.user.delete({
+				where: { id: userExist.id },
+			});
+			delete userExist.password;
+			res.status(201).json({ message: "User was deleted ✅", ...userExist });
+		} else {
+			res.status(404).json({ message: "Nos user found" });
+		}
+	} catch (error) {
+		next(error);
+	}
+};
 
 module.exports = {
 	getAllUser,
 	getUniqueUser,
 	updateUser,
+	deleteUser,
 };

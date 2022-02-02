@@ -12,7 +12,7 @@ model reservation {
   date    DateTime @db.DateTime(0)
   nbrGest Int
   userId  Int?     @default(3)
-  user    user?    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reservation_user1")
+  user    user?    @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "fk_reservation_user1")
 
   @@index([userId], map: "fk_reservation_user1_idx")
 }
