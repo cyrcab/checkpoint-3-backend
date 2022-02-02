@@ -8,11 +8,11 @@ datasource db {
 }
 
 model reservation {
-  id      Int      @id @default(autoincrement())
-  date    DateTime @db.DateTime(0)
-  nbrGest Int
-  userId  Int?     @default(3)
-  user    user?    @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "fk_reservation_user1")
+  id       Int      @id @default(autoincrement())
+  date     DateTime @db.DateTime(0)
+  nbrGuest Int
+  userId   Int?     @default(3)
+  user     user?    @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "fk_reservation_user1")
 
   @@index([userId], map: "fk_reservation_user1_idx")
 }
