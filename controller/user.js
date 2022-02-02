@@ -1,22 +1,24 @@
 const prisma = require("../helpers/prisma");
 
-const getAllUser = (req, res, next) => {
+const getAllUser = async (req, res, next) => {
 	try {
-		const listOfuser = prisma.user.findMany();
+		const listOfuser = await prisma.user.findMany({});
 		if (listOfuser[0]) {
 			listOfuser.map((user) => delete user.password);
 		}
+    console.log(listOfuser);
 		res.status(200).json(listOfuser);
 	} catch (error) {
+		console.log(error);
 		next(error);
 	}
 };
-const getUniqueUser = (req, res, next) => {
-  try {
-    const { id } = req.params;
-		const user = prisma.user.findUnique({
+const getUniqueUser = async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const user = await prisma.user.findUnique({
 			where: {
-				id: id,
+				id: Number(id),
 			},
 		});
 		if (user) {
@@ -25,6 +27,7 @@ const getUniqueUser = (req, res, next) => {
 		}
 		res.status(404).json({ message: "No resources found" });
 	} catch (error) {
+		console.log(error);
 		next(error);
 	}
 };
@@ -45,5 +48,5 @@ const getUniqueUser = (req, res, next) => {
 
 module.exports = {
 	getAllUser,
-  getUniqueUser,
+	getUniqueUser,
 };
