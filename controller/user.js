@@ -1,5 +1,6 @@
 const prisma = require("../helpers/prisma");
 const { hashPassword, verifyPassWord } = require("../services/hashPass");
+const { generateToken } = require("../services/auth");
 
 const getAllUser = async (req, res, next) => {
 	try {
@@ -122,10 +123,14 @@ const loginUser = async (req, res, next) => {
 			},
 		});
 		if (userExist) {
-			const isVerified = await verifyPassWord.toString(userExist.password, req.body.password);
+			const isVerified = verifyPassWord.toString(userExist.password, req.body.password);
 			if (isVerified) {
+				const token = generateToken(userExist);
 				delete userExist.password;
-				res.status(201).json({ message: "User connected", isConnected: true, ...userExist });
+				res
+					.status(201)
+					.cookie("acces-token", token, { httpOnly: true })
+					.json({ message: "User connected", isConnected: true, ...userExist });
 			} else {
 				res.send(401).json({ message: "User not connected", isConnected: false });
 			}
